@@ -1,0 +1,1 @@
+Based on http://blog.jcoglan.com/2012/07/29/your-first-ruby-native-extension-c/
