@@ -61,7 +61,7 @@ VALUE lol(VALUE self, VALUE klass) {
 }
 
 
-void Init_fucking_around() {
+void Init_object_model() {
   ObjectModel = rb_define_module("ObjectModel");
   rb_define_singleton_method(ObjectModel, "ancestry",  ancestry, 1);
   rb_define_singleton_method(ObjectModel, "real_class",  real_class, 1);
