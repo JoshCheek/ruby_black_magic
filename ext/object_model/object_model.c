@@ -68,7 +68,6 @@ void Init_object_model() {
   rb_define_singleton_method(ObjectModel, "real_superclass",  real_superclass, 1);
 
   IncludedClass = rb_define_class_under(ObjectModel, "IncludedClass", rb_cObject);
-  printf("IC: %d\n", (int)IncludedClass);
   rb_define_method(IncludedClass, "initialize", init_included_class, 1);
   rb_define_method(IncludedClass, "wrapped", wrapped, 0);
 
