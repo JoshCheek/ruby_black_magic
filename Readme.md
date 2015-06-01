@@ -1,3 +1,9 @@
+Object Model C Extension
+========================
+
+Example
+-------
+
 ```ruby
 require "/Users/josh/.gists/4574453/lib/object_model"
 
@@ -35,3 +41,19 @@ Wtf.lol(A) # => Wtf::lol
 Wtf.lol A   # => Wtf::lol
 A.constants # => []
 ```
+
+Install
+-------
+
+```sh
+$ git clone git@github.com:JoshCheek/object_model_c_extension.git
+$ cd object_model_c_extension/
+$ bundle install
+$ bundle exec rake compile:object_model
+$ ruby -r ./lib/object_model.bundle -e 'p ObjectModel.ancestry "omg"'
+```
+
+License
+-------
+
+[Just do what the fuck you want to.](http://www.wtfpl.net/about/)
