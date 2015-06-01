@@ -3,21 +3,18 @@
 # require "surrogate/version"
 
 Gem::Specification.new do |s|
-  s.name        = "fucking-around"
+  s.name        = "object_model"
   s.version     = '0.0.0'
   s.authors     = ["Josh Cheek"]
   s.email       = ["josh.cheek@gmail.com"]
-  s.homepage    = "http://www.google.com"
-  s.summary     = %q{Fucking around.}
-  s.description = %q{Fucking around.}
-
-  s.rubyforge_project = "fucking-around"
+  s.homepage    = "https://github.com/JoshCheek/"
+  s.summary     = %q{Object Model!}
+  s.description = %q{Object Model!}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   # s.require_paths = ["lib"]
-  s.extensions << "ext/faye_websocket/extconf.rb"
 
 
   # should be dev dep?
