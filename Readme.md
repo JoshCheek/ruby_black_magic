@@ -15,6 +15,50 @@ You will need to require the lib to run these.
 On mine, I did it like this: `require '/Users/josh/code/object_model_c_extension/lib/object_model'`
 But your location will be different (see installation instructions at the bottom)
 
+
+Swap out the class!
+
+```ruby
+# Don't do this with builtins,
+# their C-structure is too different,
+# could crash your Ruby pretty hard :P
+
+class HasLastName
+  def initialize(last_name)
+    @last_name = last_name
+  end
+
+  def name
+    "Unknown #{@last_name}"
+  end
+end
+
+class FirstnameJohn
+  def name
+    "John #{@last_name}"
+  end
+end
+
+class FirstnameJane
+  def name
+    "Jane #{@last_name}"
+  end
+end
+
+o = HasLastName.new 'Doe'
+o.class # => HasLastName
+o.name  # => "Unknown Doe"
+
+ObjectModel.set_class o, FirstnameJohn
+o.class # => FirstnameJohn
+o.name  # => "John Doe"
+
+ObjectModel.set_class o, FirstnameJane
+o.class # => FirstnameJane
+o.name  # => "Jane Doe"
+```
+
+
 Get the real class of an object, not whatever Ruby tells you.
 
 ```ruby
@@ -59,48 +103,6 @@ Wtf.lol(A) # => Wtf::lol
 # Ruby won't show it to you, though, b/c its name is invalid
 Wtf.lol A   # => Wtf::lol
 A.constants # => []
-```
-
-Swap out the class!
-
-```ruby
-# Don't do this with builtins,
-# their C-structure is too different,
-# could crash your Ruby pretty hard :P
-
-class HasLastName
-  def initialize(last_name)
-    @last_name = last_name
-  end
-
-  def name
-    "Unknown #{@last_name}"
-  end
-end
-
-class FirstnameJohn
-  def name
-    "John #{@last_name}"
-  end
-end
-
-class FirstnameJane
-  def name
-    "Jane #{@last_name}"
-  end
-end
-
-o = HasLastName.new 'Doe'
-o.class # => HasLastName
-o.name  # => "Unknown Doe"
-
-ObjectModel.set_class o, FirstnameJohn
-o.class # => FirstnameJohn
-o.name  # => "John Doe"
-
-ObjectModel.set_class o, FirstnameJane
-o.class # => FirstnameJane
-o.name  # => "Jane Doe"
 ```
 
 
