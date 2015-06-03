@@ -6,16 +6,24 @@ VALUE IncludedClass;
 // A bit out of date, but pretty helpful:
 //   http://www.eqqon.com/index.php/Ruby_C_Extension_API_Documentation_%28Ruby_1.8%29
 
-VALUE real_class(VALUE self, VALUE obj) {
-  VALUE crnt = CLASS_OF(obj);
-  if(BUILTIN_TYPE(crnt) == T_ICLASS) {
-    return rb_funcall(IncludedClass, rb_intern("new"), 1, RBASIC(crnt)->klass);
-  } else return crnt;
+VALUE real_superclass(VALUE self, VALUE klass) {
+  VALUE super = RCLASS_SUPER(klass);
+  if(BUILTIN_TYPE(super) == T_ICLASS) {
+    return rb_funcall(IncludedClass, rb_intern("new"), 1, RBASIC(super)->klass);
+  } else return super;
 }
 
-VALUE real_superclass(VALUE self, VALUE klass) {
-  return RCLASS_SUPER(klass);
+
+VALUE set_superclass(VALUE self, VALUE target, VALUE new_superclass) {
+  RCLASS(target)->super = new_superclass;
+  return target;
 }
+
+
+VALUE real_class(VALUE self, VALUE obj) {
+  return CLASS_OF(obj);
+}
+
 
 // RBasic without the `const` on klass
 typedef struct {
@@ -76,12 +84,16 @@ VALUE get_ivar(VALUE self, VALUE object, VALUE name) {
 
 void Init_black_magic() {
   BlackMagic = rb_define_module("BlackMagic");
-  rb_define_singleton_method(BlackMagic, "real_class",      real_class, 1);
+  // class level stuff
   rb_define_singleton_method(BlackMagic, "real_superclass", real_superclass, 1);
-  rb_define_singleton_method(BlackMagic, "set_class",       set_class, 2);
-  rb_define_singleton_method(BlackMagic, "set_ivar",        set_ivar, 3);
-  rb_define_singleton_method(BlackMagic, "get_ivar",        get_ivar, 2);
-  /* rb_define_singleton_method(BlackMagic, "get_ivars",       get_ivars, 1); */
+  rb_define_singleton_method(BlackMagic, "set_superclass",  set_superclass,  2);
+
+  // instance level stuff
+  rb_define_singleton_method(BlackMagic, "real_class",      real_class,      1);
+  rb_define_singleton_method(BlackMagic, "set_class",       set_class,       2);
+  rb_define_singleton_method(BlackMagic, "set_ivar",        set_ivar,        3);
+  rb_define_singleton_method(BlackMagic, "get_ivar",        get_ivar,        2);
+  /* rb_define_singleton_method(BlackMagic, "get_ivars",      get_ivars, 1); */
 
   /* IncludedClass = rb_const_get(BlackMagic, rb_intern("IncludedClass")); */
   IncludedClass = rb_define_class_under(BlackMagic, "IncludedClass", rb_cObject);
