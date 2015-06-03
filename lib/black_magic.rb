@@ -30,11 +30,11 @@ module BlackMagic
     end
 
     def class
-      ObjectModel.real_class object
+      BlackMagic.real_class object
     end
 
     def class=(klass)
-      ObjectModel.set_class object, klass
+      BlackMagic.set_class object, klass
     end
 
     def [](name)
