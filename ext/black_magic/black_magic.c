@@ -52,16 +52,26 @@ VALUE set_class(VALUE self, VALUE target, VALUE newklass) {
   return target;
 }
 
+VALUE set_ivar(VALUE self, VALUE object, VALUE name, VALUE value) {
+  return rb_ivar_set(object, rb_to_id(name), value);
+}
+
+VALUE get_ivar(VALUE self, VALUE object, VALUE name) {
+  return rb_ivar_get(object, rb_to_id(name));
+}
+
 
 /* BlackMagic::IncludedClass */
-VALUE initialize_included_class(VALUE self, VALUE klass) {
-  rb_iv_set(self, "@wrapped", klass);
-  return self;
-}
-
-VALUE wrapped(VALUE self) {
-  return rb_iv_get(self, "@wrapped");
-}
+/*
+ * VALUE initialize_included_class(VALUE self, VALUE klass) {
+ *   rb_iv_set(self, "@wrapped", klass);
+ *   return self;
+ * }
+ *
+ * VALUE wrapped(VALUE self) {
+ *   return rb_iv_get(self, "@wrapped");
+ * }
+*/
 
 
 void Init_black_magic() {
@@ -69,8 +79,12 @@ void Init_black_magic() {
   rb_define_singleton_method(BlackMagic, "real_class",      real_class, 1);
   rb_define_singleton_method(BlackMagic, "real_superclass", real_superclass, 1);
   rb_define_singleton_method(BlackMagic, "set_class",       set_class, 2);
+  rb_define_singleton_method(BlackMagic, "set_ivar",        set_ivar, 3);
+  rb_define_singleton_method(BlackMagic, "get_ivar",        get_ivar, 2);
+  /* rb_define_singleton_method(BlackMagic, "get_ivars",       get_ivars, 1); */
 
+  /* IncludedClass = rb_const_get(BlackMagic, rb_intern("IncludedClass")); */
   IncludedClass = rb_define_class_under(BlackMagic, "IncludedClass", rb_cObject);
-  rb_define_method(IncludedClass, "initialize", initialize_included_class, 1);
-  rb_define_method(IncludedClass, "wrapped",    wrapped, 0);
+  /* rb_define_method(IncludedClass, "initialize", initialize_included_class, 1); */
+  /* rb_define_method(IncludedClass, "wrapped",    wrapped, 0); */
 }

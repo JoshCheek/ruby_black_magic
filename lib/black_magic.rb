@@ -9,19 +9,16 @@ module BlackMagic
     BlackMagic::Object.new obj
   end
 
-  def self.get_ivar(object, name)
-    @get_ivar ||= Kernel.instance_method :instance_variable_get
-    @get_ivar.bind(object).call(name)
-  end
-
-  def self.set_ivar(object, name, value)
-    @set_ivar ||= Kernel.instance_method :instance_variable_set
-    @set_ivar.bind(object).call(name, value)
-  end
-
   def self.get_ivars(object)
     @get_ivars ||= Kernel.instance_method :instance_variables
     @get_ivars.bind(object).call.each_with_object({}) { |name, h| h[name] = get_ivar(object, name) }
+  end
+
+  class IncludedClass
+    attr_reader :module
+    def initialize(_module)
+      @module = _module
+    end
   end
 
   class Object
