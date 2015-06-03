@@ -37,10 +37,11 @@ module BlackMagic
     end
 
     def to_h
-      Kernel.instance_method(:instance_variables)
-            .bind(object)
-            .call
-            .each_with_object({}) { |name, h| h[name] = self[name] }
+      ivars = Kernel.instance_method(:instance_variables)
+                    .bind(object)
+                    .call
+                    .each_with_object({}) { |name, h| h[name] = self[name] }
+      {class: self.class, ivars: ivars}
     end
   end
 end
