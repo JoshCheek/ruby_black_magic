@@ -45,7 +45,7 @@ describe 'BlackMagic' do
       assert_equal 123, o.instance_variable_get(:@abc)
     end
 
-    specify '#to_h returns a hash of the real class and instance variables' do
+    specify '#ivars returns a hash of instance variables' do
       # check up to 4 values, b/c it swaps how it stores them after 3
       # https://github.com/ruby/ruby/blob/b06258f51cb7f93c179656a7af562746f5368400/include/ruby/ruby.h#L791
       o = Object.new
@@ -55,16 +55,27 @@ describe 'BlackMagic' do
 
       def o.mg; end
       o.instance_variable_set :@a, 1
-      assert_equal({class: o.singleton_class, ivars: {:@a => 1}}, bm.to_h)
+      assert_equal({:@a => 1}, bm.ivars)
 
       o.instance_variable_set :@b, 2
-      assert_equal({class: o.singleton_class, ivars: {:@a => 1, :@b => 2}}, bm.to_h)
+      assert_equal({:@a => 1, :@b => 2}, bm.ivars)
 
       o.instance_variable_set :@c, 3
-      assert_equal({class: o.singleton_class, ivars: {:@a => 1, :@b => 2, :@c => 3}}, bm.to_h)
+      assert_equal({:@a => 1, :@b => 2, :@c => 3}, bm.ivars)
 
       o.instance_variable_set :@d, 4
-      assert_equal({class: o.singleton_class, ivars: {:@a => 1, :@b => 2, :@c => 3, :@d => 4}}, bm.to_h)
+      assert_equal({:@a => 1, :@b => 2, :@c => 3, :@d => 4}, bm.ivars)
+    end
+
+
+    specify '#to_h returns a hash of the real class and instance variables' do
+      o = Object.new
+      bm = bm_obj(o)
+
+      assert_equal({class: Object, ivars: {}}, bm.to_h)
+      def o.mg; end
+      o.instance_variable_set :@a, 1
+      assert_equal({class: o.singleton_class, ivars: {:@a => 1}}, bm.to_h)
     end
   end
 

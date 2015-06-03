@@ -36,12 +36,15 @@ module BlackMagic
             .call(name, value)
     end
 
+    def ivars
+      Kernel.instance_method(:instance_variables)
+            .bind(object)
+            .call
+            .each_with_object({}) { |name, h| h[name] = self[name] }
+    end
+
     def to_h
-      ivars = Kernel.instance_method(:instance_variables)
-                    .bind(object)
-                    .call
-                    .each_with_object({}) { |name, h| h[name] = self[name] }
-      {class: self.class, ivars: ivars}
+      {class: self.class, ivars: self.ivars}
     end
   end
 end
