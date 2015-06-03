@@ -1,13 +1,13 @@
+// A bit out of date, but pretty helpful:
+//   http://www.eqqon.com/index.php/Ruby_C_Extension_API_Documentation_%28Ruby_1.8%29
 #include <ruby.h>
 
 VALUE BlackMagic;
 VALUE IncludedClass;
 
-// A bit out of date, but pretty helpful:
-//   http://www.eqqon.com/index.php/Ruby_C_Extension_API_Documentation_%28Ruby_1.8%29
-
 VALUE real_superclass(VALUE self, VALUE klass) {
   VALUE super = RCLASS_SUPER(klass);
+  if(!super) return super;
   if(BUILTIN_TYPE(super) == T_ICLASS) {
     return rb_funcall(IncludedClass, rb_intern("new"), 1, RBASIC(super)->klass);
   } else return super;
@@ -68,22 +68,10 @@ VALUE get_ivar(VALUE self, VALUE object, VALUE name) {
   return rb_ivar_get(object, rb_to_id(name));
 }
 
-
-/* BlackMagic::IncludedClass */
-/*
- * VALUE initialize_included_class(VALUE self, VALUE klass) {
- *   rb_iv_set(self, "@wrapped", klass);
- *   return self;
- * }
- *
- * VALUE wrapped(VALUE self) {
- *   return rb_iv_get(self, "@wrapped");
- * }
-*/
-
-
 void Init_black_magic() {
-  BlackMagic = rb_define_module("BlackMagic");
+  BlackMagic    = rb_define_module("BlackMagic");
+  IncludedClass = rb_define_class_under(BlackMagic, "IncludedClass", rb_cObject);
+
   // class level stuff
   rb_define_singleton_method(BlackMagic, "real_superclass", real_superclass, 1);
   rb_define_singleton_method(BlackMagic, "set_superclass",  set_superclass,  2);
@@ -93,10 +81,4 @@ void Init_black_magic() {
   rb_define_singleton_method(BlackMagic, "set_class",       set_class,       2);
   rb_define_singleton_method(BlackMagic, "set_ivar",        set_ivar,        3);
   rb_define_singleton_method(BlackMagic, "get_ivar",        get_ivar,        2);
-  /* rb_define_singleton_method(BlackMagic, "get_ivars",      get_ivars, 1); */
-
-  /* IncludedClass = rb_const_get(BlackMagic, rb_intern("IncludedClass")); */
-  IncludedClass = rb_define_class_under(BlackMagic, "IncludedClass", rb_cObject);
-  /* rb_define_method(IncludedClass, "initialize", initialize_included_class, 1); */
-  /* rb_define_method(IncludedClass, "wrapped",    wrapped, 0); */
 }

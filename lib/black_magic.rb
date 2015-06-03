@@ -2,8 +2,6 @@ require 'rbconfig'
 dlext = RbConfig::CONFIG['DLEXT']
 require "black_magic.#{dlext}"
 
-require 'object_model'
-
 module BlackMagic
   def self.for_object(obj)
     BlackMagic::Object.new obj
